@@ -22,6 +22,7 @@ class Fila:
         else:
             self.fin.atras = nuevo
         self.fin = nuevo
+        self.longitud = self.longitud + 1
 
     def registros(self):
         return self.longitud
@@ -31,6 +32,7 @@ class Fila:
             temp = self.inicio.atras
             self.inicio.atras = None
             self.inicio = temp
+            self.longitud = self.longitud - 1
 
     def mostrar_fila(self):
         if self.fila_vacia() == True:

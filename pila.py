@@ -19,12 +19,14 @@ class Pila:
         if self.pila_vacia() != True:            
             nuevo.abajo = self.cabeza
         self.cabeza = nuevo
+        self.longitud = self.longitud + 1 
 
     def pop(self):
         if self.pila_vacia() != True:
             temp = self.cabeza.abajo
             self.cabeza.abajo = None
             self.cabeza = temp
+            self.longitud = self.longitud - 1
     
     def punteo_total(self):
         return self.longitud
