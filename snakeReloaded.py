@@ -19,7 +19,7 @@ def snack_mas(stdscr,snake,h,w):
         snack1 = [posC1Y,posC1X]        
         stdscr.addstr(posC1Y,posC1X,"+")
 
-        if snake.comer(posC1X,posC1Y) == True:            
+        if snake.toca_serpiente(posC1X,posC1Y) == True:            
             snakc1 = None
             
     return snack1
@@ -33,10 +33,16 @@ def snack_menos(stdscr,snake,h,w):
         snack2 = [posC2Y, posC2X]
         stdscr.addstr(posC2Y,posC2X,"*")
 
-        if snake.comer(posC2X,posC2Y) == True:
+        if snake.toca_serpiente(posC2X,posC2Y) == True:
             snack2  =  None
 
     return snack2
+
+def score_panel(stdscr, score):
+    h, w = stdscr.getmaxyx()
+    scoreTexto =  "Score: {}".format(score.punteo_total())
+    stdscr.addstr(2,w-20, scoreTexto)
+    stdscr.refresh()
 
 def juego(stdscr):
     snake = ListaDoble()    
@@ -44,7 +50,10 @@ def juego(stdscr):
     curses.curs_set(0)
     stdscr.nodelay(1)
 
-    velocidad = 120
+    subir = False
+    nivel = 1
+    pasos = 0
+    velocidad = 125
     stdscr.timeout(velocidad)
 
     h, w = stdscr.getmaxyx()
@@ -62,7 +71,10 @@ def juego(stdscr):
     snake.pintar_serpiente(stdscr)          
     comida1 = snack_mas(stdscr,snake,h,w)
     comida2 = snack_menos(stdscr,snake,h,w)
-
+    score = Pila()
+    stdscr.addstr(2,w//2-len("Snake Reloaded"), "Snake Reloaded")
+    score_panel(stdscr,score)
+    
     while 1:
         key = stdscr.getch()    
         if key in [curses.KEY_RIGHT, curses.KEY_LEFT, curses.KEY_UP, curses.KEY_DOWN]:
@@ -84,7 +96,9 @@ def juego(stdscr):
         stdscr.addstr(snake.retornar_inicioY(),snake.retornar_inicioX(),'S')
         
         if snake.comer(comida1[1],comida1[0]) == True:
-            comida1 = snack_mas(stdscr,snake,h,w)             
+            comida1 = snack_mas(stdscr,snake,h,w) 
+            score.push(comida1[1],comida1[0])
+
         else:
             stdscr.addstr(snake.retornar_finY(), snake.retornar_finX()," ")
             snake.eliminar_fin()                        
@@ -93,7 +107,27 @@ def juego(stdscr):
             comida2 = snack_menos(stdscr,snake,h,w)
             if snake.mostra_longitud() > 3:
                 stdscr.addstr(snake.retornar_finY(), snake.retornar_finX()," ")
-                snake.eliminar_fin()                        
+                score.pop()
+                snake.eliminar_fin()     
+                
+        score_panel(stdscr,score)                  
+        
+        if score.punteo_total() != 0:
+            if score.punteo_total()%15 == 0:            
+                pasos = pasos + 1
+            else:
+                pasos = 0
+
+        if pasos == 1:
+            subir = True
+        else:
+            subir = False
+
+        if subir == True:
+            if velocidad > 5:
+                velocidad = velocidad - 30
+                stdscr.timeout(velocidad)
+
 
         if (snake.retornar_inicioX() == 3 or 
         snake.retornar_inicioY()== 3 or 
@@ -104,6 +138,7 @@ def juego(stdscr):
             stdscr.nodelay(0)
             stdscr.getch()
             snake.graficar()
+            score.graficar()
             time.sleep(5)            
             
             break

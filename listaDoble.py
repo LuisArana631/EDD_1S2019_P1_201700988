@@ -62,6 +62,17 @@ class ListaDoble:
                 comiendo = True
         return comiendo
 
+    def toca_serpiente(self, posX, posY):
+        toco = False
+        aux = self.inicio
+        while aux is not None:
+            if posX == aux.posX:
+                if posY == aux.posY:
+                    toco = True
+            aux = aux.siguiente
+        return toco
+        
+
     def pintar_serpiente(self,  stdscr):
         if self.lista_vacia() != True:
             aux = self.inicio
