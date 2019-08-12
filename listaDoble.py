@@ -1,4 +1,5 @@
 import os
+import curses
 
 class Nodo:
     def __init__(self, posX=None, posY=None):
@@ -53,6 +54,45 @@ class ListaDoble:
             self.fin.anterior = None
             self.fin = aux
         self.longitud = self.longitud - 1
+
+    def comer(self, posX, posY):        
+        comiendo = False
+        if posX == self.inicio.posX:
+            if posY == self.inicio.posY:
+                comiendo = True
+        return comiendo
+
+    def pintar_serpiente(self,  stdscr):
+        if self.lista_vacia() != True:
+            aux = self.inicio
+            while aux is  not None:                
+                stdscr.addstr(aux.posY,aux.posX,"S")
+                aux = aux.siguiente
+
+    def retornar_inicioX(self):
+        return self.inicio.posX
+
+    def retornar_inicioY(self):
+        return self.inicio.posY
+
+    def retornar_finX(self):
+        return self.fin.posX
+
+    def retornar_finY(self):
+        return self.fin.posY
+
+    def mostra_longitud(self):
+        return self.longitud
+
+    def valores_repetidos(self):
+        aux = self.inicio.siguiente        
+        encontrado = False
+        while aux is not None:
+            if aux.posX == self.inicio.posX:
+                if aux.posY == self.inicio.posY:
+                    encontrado = True                    
+            aux = aux.siguiente
+        return encontrado        
 
     def graficar(self):
         if self.lista_vacia() == True:
