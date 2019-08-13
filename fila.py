@@ -1,4 +1,5 @@
 import os
+import time
 
 class Nodo:
     def __init__(self, nombre=None, punteo=None):
@@ -10,7 +11,7 @@ class Fila:
     def __init__(self):
         self.inicio = None
         self.fin = None
-        self.longitud = 0
+        self.longitud = 0    
 
     def fila_vacia(self):
         return self.inicio == None
@@ -89,3 +90,23 @@ class Fila:
         self.inicio = None
         self.fin = None
         self.longitud = 0
+
+    def pintar_top(self, stdscr,w):
+        aux = self.inicio
+        posY = 5
+        posX = w//2-5
+        stdscr.nodelay(0)
+        
+        while aux is not None:
+            texto = aux.nombre + ", " + str(aux.punteo)
+            stdscr.addstr(posY,posX,texto)            
+
+            posY = posY + 1
+
+            aux = aux.atras 
+
+        stdscr.getch()
+        time.sleep(3)
+
+    def retornar_long(self):
+        return self.longitud

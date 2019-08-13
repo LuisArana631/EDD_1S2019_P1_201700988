@@ -1,10 +1,18 @@
 import curses
 from curses import textpad
+from curses import KEY_UP
+from curses import KEY_DOWN
+from curses import KEY_ENTER
+import snakeReloaded
 from snakeReloaded import *
+from listaDobleCircular import *
 
 game = snakeGame()
+usuarios = ListaDobleCircular()
 
-menu = ["1. Play", "2. Scoreboard", "3. User Selection", "4. Reports", "5. Bulk Loading", "6. Exit"]
+menu = ["1. Play", "2. Scoreboard", "3. User Selection", "4. Reports", "5. Bulk Loading"]
+
+usuario_selected = ""
 
 def mostrar_menu(stdscr, selected_row_idx):
     stdscr.clear()
@@ -26,8 +34,18 @@ def mostrar_menu(stdscr, selected_row_idx):
             stdscr.addstr(y, x, row)
     stdscr.refresh()
 
+#def ingresar_usuario(stdscr):
+#    break
+
+#def bulk_usuarios(stdscr):
+#    break
+
+#def seleccionar_usuario(stdscr):
+#    break
+
 def main(stdscr):    
     curses.curs_set(0)
+    stdscr.nodelay(0)                
 
     curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_GREEN)
     current_row = 0
@@ -43,17 +61,21 @@ def main(stdscr):
         elif key == curses.KEY_ENTER or key in [10, 13]:            
             if current_row == 0:                                
                 stdscr.clear()
-                game.juego(stdscr)                 
+                #if usuario_selected == "":
+                    #ingresar_usuario(stdscr)
+                game.juego(stdscr, usuario_selected)                 
                 main(stdscr)
             if current_row == 1:
-                break
+                stdscr.clear()
+                game.mostrar_top(stdscr)
+                main(stdscr)                
             if current_row == 2:
                 break
             if current_row == 3:
-                break
+                game.imprimir_reportes()
+                usuarios.graficar()
+                main(stdscr)
             if current_row == 4:
-                break
-            if current_row == 5:
                 break
 
         mostrar_menu(stdscr, current_row)

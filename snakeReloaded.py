@@ -57,10 +57,27 @@ class snakeGame:
         stdscr.addstr(2,w-10, scoreTexto)
         stdscr.refresh()
 
-    def juego(self,stdscr): 
+    def mostrar_top(self, stdscr):
+        curses.curs_set(0)
+        stdscr.nodelay(0)
+        stdscr.clear()
 
-        self.snake.reiniciar_snake()
-        self.top.reiniciar_fila()
+        h, w = stdscr.getmaxyx()
+        ancho = w-3
+        alto = h-3
+        caja = [[3,3],[alto,ancho]]
+        textpad.rectangle(stdscr,caja[0][0], caja[0][1], caja[1][0], caja[1][1]) 
+        stdscr.addstr(2,w//2-7, "Snake Reloaded")
+        stdscr.refresh()
+        if self.top.fila_vacia() != True:
+            self.top.pintar_top(stdscr,w)                        
+        else:
+            stdscr.addstr(h//2,w//2-5, "No hay registro de juegos")            
+        stdscr.getch()
+
+    def juego(self,stdscr,usuario): 
+
+        self.snake.reiniciar_snake()        
         self.score.reiniciar_pila()
         self.subir = False
         self.nivel = 1
@@ -89,6 +106,7 @@ class snakeGame:
         comida2 = self.snack_menos(stdscr,self.snake,h,w)
         stdscr.addstr(2,w//2-7, "Snake Reloaded")
         self.score_panel(stdscr,self.score)
+        stdscr.addstr(2,3,usuario)
         
         while 1:
             key = stdscr.getch()    
@@ -149,13 +167,18 @@ class snakeGame:
             self.snake.retornar_inicioX() == w-3 or
             self.snake.retornar_inicioY() == h-3 or
             self.snake.valores_repetidos() == True):
-                self.top.insertar("Marielos",self.score.punteo_total())            
+                self.top.insertar(usuario,self.score.punteo_total())
+                if self.top.retornar_long() > 10:
+                    self.top.eliminar()            
                 stdscr.addstr(h//2,w//2-len("Game Over")//2,"Game Over")
                 stdscr.nodelay(0)
-                stdscr.getch() 
-                self.snake.graficar()
-                time.sleep(2)                     
+                stdscr.getch()                 
+                time.sleep(1)                     
                 break
             stdscr.refresh()                            
 
+    def imprimir_reportes(self):
+        self.snake.graficar()
+        self.top.graficar()
+        self.score.graficar()
 
