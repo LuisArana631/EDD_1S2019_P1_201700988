@@ -98,7 +98,7 @@ class Fila:
         stdscr.nodelay(0)
         
         while aux is not None:
-            texto = aux.nombre + ", " + str(aux.punteo)
+            texto = str(aux.nombre) + ", " + str(aux.punteo)
             stdscr.addstr(posY,posX,texto)            
 
             posY = posY + 1

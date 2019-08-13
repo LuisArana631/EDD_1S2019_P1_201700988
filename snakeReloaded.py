@@ -57,11 +57,10 @@ class snakeGame:
         stdscr.addstr(2,w-10, scoreTexto)
         stdscr.refresh()
 
-    def mostrar_top(self, stdscr):
-        curses.curs_set(0)
-        stdscr.nodelay(0)
+    def mostrar_top(self, stdscr):        
+        curses.curs_set(0)        
         stdscr.clear()
-
+        stdscr.nodelay(0)
         h, w = stdscr.getmaxyx()
         ancho = w-3
         alto = h-3
@@ -86,6 +85,7 @@ class snakeGame:
 
         curses.curs_set(0)
         stdscr.nodelay(1)
+        curses.noecho()
         
         stdscr.timeout(self.velocidad)
 
