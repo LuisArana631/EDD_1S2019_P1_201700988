@@ -106,7 +106,7 @@ class Fila:
             aux = aux.atras 
 
         stdscr.getch()
-        time.sleep(3)
+        time.sleep(2)
 
     def retornar_long(self):
         return self.longitud

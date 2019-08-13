@@ -1,11 +1,12 @@
 import curses
 from curses import textpad
-from curses.textpad import Textbox
+from curses.textpad import Textbox, rectangle
 from curses import KEY_UP
 from curses import KEY_DOWN
 from curses import KEY_ENTER
 import snakeReloaded
 from snakeReloaded import *
+import listaDobleCircular
 from listaDobleCircular import *
 
 game = snakeGame()
@@ -45,21 +46,68 @@ def ingresar_usuario(stdscr):
     stdscr.addstr(2,w//2-7, "Snake Reloaded")
     stdscr.addstr(6,w//2-9,"Ingresa tu nickname")
     stdscr.refresh() 
-    curses.echo()  
-    curses.flushinp()
-    usuario_selected = stdscr.getstr(8,w//2-5).decode(encoding="utf-8")
-    curses.noecho()
+    
+    editwin = curses.newwin(1,20, 10,50)
+    stdscr.refresh()
+    box = Textbox(editwin)
+    box.edit()
+    usuario_selected = box.gather()    
+    editwin.clear()    
+
     print(usuario_selected) 
     return usuario_selected    
 
-#def bulk_usuarios(stdscr):
-#    break
+def bulk_usuarios(stdscr):
+    stdscr.clear()
+    stdscr.nodelay(0)
+    h, w = stdscr.getmaxyx()
+    ancho = w-3
+    alto = h-3
+    caja = [[3,3],[alto,ancho]]
+    textpad.rectangle(stdscr,caja[0][0], caja[0][1], caja[1][0], caja[1][1]) 
+    stdscr.addstr(2,w//2-7, "Snake Reloaded")
+    stdscr.addstr(6,w//2-16,"Ingresa la direccion del archivo")
+    stdscr.refresh() 
+    
+    editwin = curses.newwin(1,90, 10,20)
+    stdscr.refresh()
+    box = Textbox(editwin)
+    box.edit()
+    direccion = box.gather()    
+    editwin.clear()
+    
+    try:
+        archivo = open(direccion,"r")     
+        conteo = 0       
+        
+        for linea in archivo.readlines():
+            if conteo != 0:            
+                usuarios.insertar(linea)
+            conteo = conteo + 1
 
-#def seleccionar_usuario(stdscr):
-#    break
+        archivo.close()
+    except:
+        stdscr.addstr(h//2,w//2,"El archivo no se encuentra")
+        time.sleep(2)
+
+def seleccionar_usuario(stdscr):
+    stdscr.clear()
+    stdscr.nodelay(0)
+    h, w = stdscr.getmaxyx()
+    ancho = w-3
+    alto = h-3
+    caja = [[3,3],[alto,ancho]]
+    textpad.rectangle(stdscr,caja[0][0], caja[0][1], caja[1][0], caja[1][1]) 
+    stdscr.addstr(2,w//2-7, "Snake Reloaded")
+    stdscr.addstr(6,w//2-16,"Ingresa la direccion del archivo")
+    stdscr.addstr(h//2,5,"<-")
+    stdscr.addstr(h//2,w-5,"->")
+    stdscr.refresh() 
+    stdscr.getch()
 
 def main(stdscr):  
-    usuario_selected = ""      
+    usuario_selected = ""
+    stdscr = curses.initscr()      
     curses.curs_set(0)
     stdscr.nodelay(0)                
 
@@ -77,6 +125,7 @@ def main(stdscr):
         elif key == curses.KEY_ENTER or key in [10, 13]:            
             if current_row == 0:                                
                 stdscr.clear()
+                curses.noecho()
 
                 if usuario_selected == "": 
                     stdscr.nodelay(0)       
@@ -92,12 +141,13 @@ def main(stdscr):
                 stdscr.clear()
                 game.mostrar_top(stdscr)           
             if current_row == 2:
-                break
+                seleccionar_usuario(stdscr)
             if current_row == 3:
                 game.imprimir_reportes()
                 usuarios.graficar()
             if current_row == 4:
-                break
+                stdscr.clear()
+                bulk_usuarios(stdscr)
 
         usuario_selected = ""
         stdscr.nodelay(0)
