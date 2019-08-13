@@ -70,8 +70,7 @@ class ListaDoble:
                 if posY == aux.posY:
                     toco = True
             aux = aux.siguiente
-        return toco
-        
+        return toco        
 
     def pintar_serpiente(self,  stdscr):
         if self.lista_vacia() != True:
@@ -174,5 +173,10 @@ class ListaDoble:
             while temp is not None:
                 print(temp.posX,",",temp.posY,"|")
                 temp = temp.siguiente
+
+    def reiniciar_snake(self):
+        self.inicio = None
+        self.fin = None
+        self.longitud = 0
 
     

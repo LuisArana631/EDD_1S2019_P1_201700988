@@ -84,3 +84,8 @@ class Fila:
 
             os.system("dot -Tpng scoreReporte.dot -o scoreReporte.png")
             os.system("scoreReporte.png")
+
+    def reiniciar_fila(self):
+        self.inicio = None
+        self.fin = None
+        self.longitud = 0

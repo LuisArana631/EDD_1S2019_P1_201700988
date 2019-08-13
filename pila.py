@@ -78,3 +78,7 @@ class Pila:
             while aux is not None:            
                 print(str(aux.posX),",",str(aux.posY) , "|")
                 aux = aux.abajo
+
+    def reiniciar_pila(self):
+        self.cabeza = None
+        self.longitud = 0
