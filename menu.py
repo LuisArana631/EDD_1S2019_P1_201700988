@@ -78,11 +78,13 @@ def bulk_usuarios(stdscr):
     
     try:
         archivo = open(direccion,"r")     
-        conteo = 0       
-        
+        conteo = 0               
         for linea in archivo.readlines():
-            if conteo != 0:            
-                usuarios.insertar(linea)
+            if conteo != 0:                       
+                    longitu = len(linea)
+                    linea = linea[:longitu - 2]
+                    if linea != "":
+                        usuarios.insertar(linea)               
             conteo = conteo + 1
 
         archivo.close()
@@ -92,18 +94,27 @@ def bulk_usuarios(stdscr):
 
 def seleccionar_usuario(stdscr):
     stdscr.clear()
-    stdscr.nodelay(0)
+    curses.curs_set(0)
+    stdscr.nodelay(0) 
     h, w = stdscr.getmaxyx()
     ancho = w-3
     alto = h-3
     caja = [[3,3],[alto,ancho]]
     textpad.rectangle(stdscr,caja[0][0], caja[0][1], caja[1][0], caja[1][1]) 
     stdscr.addstr(2,w//2-7, "Snake Reloaded")
-    stdscr.addstr(6,w//2-16,"Ingresa la direccion del archivo")
-    stdscr.addstr(h//2,5,"<-")
-    stdscr.addstr(h//2,w-5,"->")
-    stdscr.refresh() 
-    stdscr.getch()
+    stdscr.addstr(6,w//2-16,"Ingresa la posicion del usuario")   
+    
+    editwin = curses.newwin(1,50, 10,w//2)
+    stdscr.refresh()
+    box = Textbox(editwin)
+    box.edit()
+    pos = box.gather()    
+    editwin.clear()
+    
+    return usuarios.mostrar_nombre(int(pos))    
+
+    
+    
 
 def main(stdscr):  
     usuario_selected = ""
@@ -137,19 +148,21 @@ def main(stdscr):
 
                 curses.noecho()
                 game.juego(stdscr, usuario_selected)                            
+                usuario_selected = ""
             if current_row == 1:
                 stdscr.clear()
                 game.mostrar_top(stdscr)           
             if current_row == 2:
-                seleccionar_usuario(stdscr)
+                movs = 0
+                usuario_selected = seleccionar_usuario(stdscr)
+                print(usuario_selected)
             if current_row == 3:
                 game.imprimir_reportes()
                 usuarios.graficar()
             if current_row == 4:
                 stdscr.clear()
                 bulk_usuarios(stdscr)
-
-        usuario_selected = ""
+        
         stdscr.nodelay(0)
         mostrar_menu(stdscr, current_row)
 

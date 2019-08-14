@@ -32,6 +32,14 @@ class ListaDobleCircular:
         self.longitud = self.longitud + 1    
         print(self.longitud)
 
+    def mostrar_nombre(self, pos):
+        aux = self.inicio
+        conteo = 0
+        if pos < self.longitud:
+            while conteo < pos:
+                aux = aux.siguiente
+            return aux.nombre
+
     def mostrar_lista(self):
         if self.lista_vacia() == True:
             print("Lista doble circular vacia")
@@ -105,3 +113,6 @@ class ListaDobleCircular:
 
             os.system("dot -Tpng usuariosReporte.dot -o usuariosReporte.png")
             os.system("usuariosReporte.png")
+
+    def retornar_longitud(self):
+        return self.longitud
