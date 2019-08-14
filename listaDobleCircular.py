@@ -38,6 +38,7 @@ class ListaDobleCircular:
         if pos < self.longitud:
             while conteo < pos:
                 aux = aux.siguiente
+                conteo = conteo + 1
             return aux.nombre
 
     def mostrar_lista(self):

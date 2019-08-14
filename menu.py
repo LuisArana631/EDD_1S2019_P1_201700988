@@ -90,6 +90,7 @@ def bulk_usuarios(stdscr):
         archivo.close()
     except:
         stdscr.addstr(h//2,w//2,"El archivo no se encuentra")
+        stdscr.refresh()
         time.sleep(2)
 
 def seleccionar_usuario(stdscr):
@@ -102,20 +103,37 @@ def seleccionar_usuario(stdscr):
     caja = [[3,3],[alto,ancho]]
     textpad.rectangle(stdscr,caja[0][0], caja[0][1], caja[1][0], caja[1][1]) 
     stdscr.addstr(2,w//2-7, "Snake Reloaded")
-    stdscr.addstr(6,w//2-16,"Ingresa la posicion del usuario")   
-    
-    editwin = curses.newwin(1,50, 10,w//2)
+    stdscr.addstr(6,w//2-11,"Seleccionar el usuario")   
+    stdscr.addstr(h//2,8,"<-")
+    stdscr.addstr(h//2,w-8,"->")
+    pos = 0
+    tamanio = usuarios.retornar_longitud()
+    stdscr.addstr(h//2,w//2-3,usuarios.mostrar_nombre(pos))
     stdscr.refresh()
-    box = Textbox(editwin)
-    box.edit()
-    pos = box.gather()    
-    editwin.clear()
-    
-    return usuarios.mostrar_nombre(int(pos))    
+    selec = False
+    while selec == False:
+        key = stdscr.getch()
+        
+        if key == curses.KEY_RIGHT:
+            if pos < tamanio - 1:
+                pos = pos + 1
+            else:
+                pos = 0            
+        elif key == curses.KEY_LEFT:
+            if pos > 0:
+                pos = pos - 1
+            else:
+                pos = tamanio - 1 
+        elif key == curses.KEY_UP:
+            curses.flash()      
+            selec = True       
 
-    
-    
+        stdscr.addstr(h//2,w//2-3,usuarios.mostrar_nombre(pos))
+        stdscr.refresh()
 
+    return usuarios.mostrar_nombre(pos)
+
+      
 def main(stdscr):  
     usuario_selected = ""
     stdscr = curses.initscr()      
